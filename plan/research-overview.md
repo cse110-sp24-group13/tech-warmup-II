@@ -169,11 +169,7 @@ The UX of Book of Ra Deluxe is focused on simple gameplay with a high-risk, high
 
 Couldn’t copy paste, sorry guys
 
-![image.png](attachment:596a396a-0ee5-4aaf-b4c2-12bd10d2f4a6:image.png)
-
-![image.png](attachment:d5b4c667-0fb3-465f-9873-b279b6f0754e:image.png)
-
-![image.png](attachment:66f9e0bd-b248-4dc6-b6c3-2a1e888c944d:image.png)
+![Alt text](image/68A0394C-CF6B-4C70-A6D1-1FD3BADE88C7.png)
 
 ## Good Reviews (5 stars):
 
