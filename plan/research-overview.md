@@ -362,7 +362,7 @@ The UX feels slower and more focused compared to other slots. There are fewer an
 
 # Age of The Gods 2
 
-![Age of The Gods 2](image/Age_of_The_Gods_2.png)
+![Age of The Gods 2](./image/Age_of_The_Gods_2.png)
 
 ## UI / UX
 
