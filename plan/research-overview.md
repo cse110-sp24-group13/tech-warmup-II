@@ -240,7 +240,7 @@ Couldn’t copy paste, sorry guys
 ![Good reviews](image/F3CEE9F6-DCAE-4F3A-9991-F0E47093BD29.png)
 
 
-#### Mega Moolah
+## Mega Moolah
 
 : couldn't find in the app store or web store (So, found the reviews of the game)
 
@@ -264,7 +264,7 @@ Feature:
 
 ---
 
-#### 88 Fortunes
+## 88 Fortunes
 
 Maker: Bally Technologies
 
@@ -303,7 +303,7 @@ Bad:
 
 ---
 
-#### Blood Suckers
+## Blood Suckers
 
 Maker: NetEnt
 
