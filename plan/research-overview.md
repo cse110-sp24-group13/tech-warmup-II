@@ -28,6 +28,72 @@ As a progression-focused player, Michael wants to unlock new slot machine themes
 Research on popular slot machine apps:
 Apps to be researched: Starburst, Rainbow Riches, Book of Ra Deluxe
 
+# Jeong
+
+## Persona
+
+1. Name: Donalf J. Trumb
+   - Age: 46
+   - **Occupation:** Small Business Owner, but thinks he is a great Entrepreneur.
+   - Background: Donalf owns a struggling real estate business but maintains a public image of extreme wealth. He views gambling not just as a game, but as a way to "fix" his business finances with one big strike. He is loud, impatient, and loves the spotlight.
+   - Goal: To hit a life-changing Jackpot
+   - Frustrations: He finds low-payout is annoying and a waste of time. Also, he hates having to click "Spin" every time. He wants the game to run itself while he manages other business.
+   - Need: Auto play system, High volatility mechanics, Access to bonus rounds and free spins where the big money is hidden, Flashy Big win
+
+2. Name: Robert De Niro
+   - Age: 78
+   - Occupation: Retired Professor (Mathematics)
+   - Background: Since his wife passed away, Robert lives a quiet, solitary life. He is highly intellectual and keeps his mind sharp with puzzles. He has a fixed pension and treats his gaming budget with the same discipline he used in academia.
+   - Goals: To pass the time with a mentally stimulating activity. To win enough to buy dinner to his friend or grand kids. To analyze the game, and want to test different strategies.
+   - Frustration: He is physically bothered by loud noises and colorful lights. He feels alienated by games that force large bets, as he doesn't want to risk his savings.
+   - Needs: Low stakes (low minimum bet option), Dashboard showing his win/loss ratio and spin history to help his strategy, minimalist UI with jazz, Long-term goals that reward "time played" or "consistency"
+
+---
+
+## User Story
+
+1. As Donalf, I want to set an automated "Auto-spin" feature for 100+ rounds, so that I can keep the game running 24/7 without having to click the button manually while I manage my business.
+2. As Robert, I want to access a real-time statistics dashboard (showing win/loss ratios and RTP), so that I can analyze the game's patterns and feel like I am applying a logical strategy.
+
+---
+
+## User
+
+1. How to play different kinds of slot machine: https://www.cachecreek.com/how-to-play-slots
+
+---
+
+## The legal Trinity (for gambling)
+
+1. Consideration: to play a game user should pay
+2. Chance: the result should be 100% luck
+3. Reward: by the result the user will be prized by Cash
+
+---
+
+## Rules for Slot Machines - Gambling
+
+1. Random Number Generator: Have to prove the results are random & independent
+2. Non-volatile Ram: in case of power failure, the machine must be able to restore the exact state of the last game, including credits and player status
+
+---
+
+## Rules for Slot Machines - Entertainment
+
+1. Prize Limitation: The prize of the game should not be Cash (Real Money)
+   - Merchandise only: Prizes must be physical items or tickets/ coupons
+2. It should be skill based not luck
+   - Chance-based: like slot machine if the user only presses the button and gets a prize, this is considered gambling
+   - Skilled-based: A game where the player's reaction time, hand-eye coordination, or strategy significantly dictates the outcome.
+3. Free Replay is accepted as Amusement
+
+Red Flags (Features to Avoid)
+
+- Knock-off switch: hidden buttons used by the maker to wipe credits
+- Using classic gambling symbols (e.g. 777, Jackpot, etc)
+
+---
+
 **Citeria**
 
 1. Features
