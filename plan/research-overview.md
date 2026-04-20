@@ -75,6 +75,7 @@ As Robert, I want to access a real-time statistics dashboard (showing win/loss r
 
 Story 5: 
 As a casual player, Alex wants to clearly see the game results after each spin so that he can quickly understand if he wins or loses.
+
 Story 6: 
 As a new user, Mia wants clear instructions so that she can learn how to play quickly.
 
