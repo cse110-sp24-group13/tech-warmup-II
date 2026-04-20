@@ -304,6 +304,8 @@ Bad:
 - "Audio loop gets repetitive quickly, ended up muting it"
 - "Heavier wins are mostly tied to the bonus, base game alone can feel grindy"
 
+UI: 
+- ![88](https://github.com/user-attachments/assets/365807a7-666d-4c8b-8cff-427da0d20ffc)
 ---
 
 ## Blood Suckers
@@ -344,6 +346,9 @@ Bet: Min ($0.01) to Max ($50)
     - "the lines are fixed thus there is no way to change how many lines you want to play to lower your stake per spin"
     - "Because the variance is low, you can't win a lot of money out of this game"
     - "The bonus game is really hard to get"
+
+UI: 
+- ![BloodSuckers](https://github.com/user-attachments/assets/c4ecb698-2ed2-4eb6-95bd-01c7db2bb3c2)
 
 ---
 
