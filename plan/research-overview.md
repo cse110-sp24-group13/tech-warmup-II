@@ -249,7 +249,7 @@ Maker: Microgaming
 Theme: Africa Safari (Using a lot of animal symbols)
 
 - Each animal has a character like graceful giraffes, mischievous monkeys, majestic lions → this game has its own story line.
-- ![Safari](https://github.com/ucsd-cse29-fa25/pa1-utf8-jep053/issues/1#issue-4293182037)
+- ![Safari](img src="https://github.com/user-attachments/assets/8c560eec-0cad-4b3f-9ecc-40e94386569c", width="50%")
 
 Feature:
 
