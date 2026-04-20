@@ -46,8 +46,10 @@ Name: Robert De Niro
    - Frustration: He is physically bothered by loud noises and colorful lights. He feels alienated by games that force large bets, as he doesn't want to risk his savings.
    - Needs: Low stakes (low minimum bet option), Dashboard showing his win/loss ratio and spin history to help his strategy, minimalist UI with jazz, Long-term goals that reward "time played" or "consistency"
 
+
 Story 3:
    As Donalf, I want to set an automated "Auto-spin" feature for 100+ rounds, so that I can keep the game running 24/7 without having to click the button manually while I manage my business.
+
 Story 4:
    As Robert, I want to access a real-time statistics dashboard (showing win/loss ratios and RTP), so that I can analyze the game's patterns and feel like I am applying a logical strategy.
 
