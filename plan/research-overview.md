@@ -126,7 +126,7 @@ The UX of Rainbow Riches is designed to be easy for beginners and fans of tradit
 - **Max Win:** Rainbow Riches can pay up to around **500x the player’s total stake** in its bonus features.
 
 ## Bad reviews (1 star):
-Quick warning, it seems that the majority of bad reviews are against the company more so than against the game…
+It seems that the majority of bad reviews are against the company more so than against the game, so there exists some bias outside of development.
 
 **Review 1**
 
