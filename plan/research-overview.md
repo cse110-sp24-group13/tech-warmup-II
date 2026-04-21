@@ -45,7 +45,7 @@ Red Flags (Features to Avoid)
 2. Overview (3 good reviews+ 3 bad reviews)
 3. UX/ UI (also add screenshot of each apps slot machine)
 
-# Starburst:
+# Starburst: Ophir
 
 ![Starburst](image/starburst.png)
 
