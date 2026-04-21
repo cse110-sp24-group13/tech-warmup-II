@@ -1,87 +1,3 @@
-# Persona & User story
-## Persona 1:
-
-- Name: Sarah
-- Age: 22
-- Occupation: College Student
-- Background: Sarah is busy with classes, part-time work, and social activities. She likes simple mobile games she can play in short bursts between classes or during any free time she has.
-- Goals: Relax, have fun, and enjoy visually satisfying gameplay without needing to learn complicated rules.
-- Frustrations: Gets annoyed by confusing menus, too many ads, games that feel impossible, or slot machines that are too repetitive.
-- Needs: Easy controls, colorful visuals, quick game sessions, and rewards that make progress feel satisfying.
-
-## Persona 2:
-
-- Name: Michael
-- Age: 34
-- Occupation: IT Support Specialist
-- Background: Michael enjoys games that have progression systems, prizes to unlock, and a sense of achievement. He is more likely to spend longer sessions playing and likes comparing results with friends.
-- Goals: Unlock new slot machine themes, track stats, earn achievements, and feel like skill or strategy matters.
-- Frustrations: Loses interest if the game has no progression, no variety, or feels too random with no goals to work toward.
-- Needs: Statistics tracking, achievement systems, multiple machine themes, daily rewards, and some level of player choice.
-
-## Persona 3:
-
-- Name: Donalf J. Trumb
-- Age: 46
-- **Occupation:** Small Business Owner, but thinks he is a great Entrepreneur.
-- Background: Donalf owns a struggling real estate business but maintains a public image of extreme wealth. He views gambling not just as a game, but as a way to "fix" his business finances with one big strike. He is loud, impatient, and loves the spotlight.
-- Goal: To hit a life-changing Jackpot
-- Frustrations: He finds low-payout is annoying and a waste of time. Also, he hates having to click "Spin" every time. He wants the game to run itself while he manages other business.
-- Need: Auto play system, High volatility mechanics, Access to bonus rounds and free spins where the big money is hidden, Flashy Big win
-
-## Persona 4:
-
-- Name: Robert De Niro
-- Age: 78
-- Occupation: Retired Professor (Mathematics)
-- Background: Since his wife passed away, Robert lives a quiet, solitary life. He is highly intellectual and keeps his mind sharp with puzzles. He has a fixed pension and treats his gaming budget with the same discipline he used in academia.
-- Goals: To pass the time with a mentally stimulating activity. To win enough to buy dinner to his friend or grand kids. To analyze the game, and want to test different strategies.
-- Frustration: He is physically bothered by loud noises and colorful lights. He feels alienated by games that force large bets, as he doesn't want to risk his savings.
-- Needs: Low stakes (low minimum bet option), Dashboard showing his win/loss ratio and spin history to help his strategy, minimalist UI with jazz, Long-term goals that reward "time played" or "consistency"
-  
-## Persona 5:
-
-- Name: Alex
-- Age: 20
-- Occupation: College student
-- Background: Alex is a college student who likes to play simple games during short breaks.
-- Goals: Relax and have fun, play quickly without thinking too much and Understand the game easily
-- Frustrations: Too many buttons, confusing rules and Hard to see results
-- Needs: Alex needs a simple interface, clear buttons, and easy-to-see results after each spin.
-
-## Persona 6:
-
-- Name: Mia
-- Age: 22
-- Occupation: Part-time worker
-- Background: Mia has not played slot machine games before.
-- Goals: Learn how to play quickly, feel comfortable using the app and understand the result of each spin
-- Frustrations: Unknown terms like "wild" or "scatter", no instructions and too many visual effects
-- Needs:  Mia needs beginner-friendly design, simple language, and clear feedback after each action.
-
-## User Story:
-
-Story 1:
-As a casual player, Sarah wants to be able to start a game immediately without creating an account so that she can quickly play during short breaks.
-
-Story 2:
-As a progression-focused player, Michael wants to unlock new slot machine themes and achievements over time so that he feels rewarded for continuing to play.
-
-Story 3:
-As Donalf, I want to set an automated "Auto-spin" feature for 100+ rounds, so that I can keep the game running 24/7 without having to click the button manually while I manage my business.
-
-Story 4:
-As Robert, I want to access a real-time statistics dashboard (showing win/loss ratios and RTP), so that I can analyze the game's patterns and feel like I am applying a logical strategy.
-
-Story 5: 
-As a casual player, Alex wants to clearly see the game results after each spin so that he can quickly understand if he wins or loses.
-
-Story 6: 
-As a new user, Mia wants clear instructions so that she can learn how to play quickly.
-
-Research on popular slot machine apps:
-Apps to be researched: Starburst, Rainbow Riches, Book of Ra Deluxe, Guns ‘n’ Roses, Dead or Alive 2, Age of The Gods 2, Mega Moolah, 88 Fortunes, Blood Suckers
-
 
 ---
 
@@ -129,7 +45,9 @@ Red Flags (Features to Avoid)
 2. Overview (3 good reviews+ 3 bad reviews)
 3. UX/ UI (also add screenshot of each apps slot machine)
 
-# Starburst:
+# Starburst: 
+
+By Ophir
 
 ![Starburst](image/starburst.png)
 
@@ -185,6 +103,8 @@ The combination of the space theme and sparkling gemstones works very well. The 
 Of all the slot machines I’ve tried, Starburst is the one I constantly return to. The feature that allows wins from both directions significantly improves both the experience and the winning possibilities.
 
 # Rainbow Riches:
+
+by Shazi
 
 ![Rainbow Riches](image/RR.png)
 
@@ -273,6 +193,8 @@ Couldn’t copy paste, sorry guys
 
 # Guns ‘n’ Roses
 
+by Andrew
+
 ![Guns N Roses](image/Guns_n_Roses.png)
 
 ## UI / UX
@@ -309,6 +231,8 @@ The UX feels smooth and engaging. The animations, fire effects, and bonus symbol
 ---
 
 # Dead or Alive 2
+
+by Aaron
 
 ![Dead or Alive 2](image/Dead_or_Alive_2.png)
 
@@ -362,6 +286,8 @@ The UX feels slower and more focused compared to other slots. There are fewer an
 
 # Age of The Gods 2
 
+By Yang
+
 ![Age of The Gods 2](image/Age_of_The_Gods_2.png)
 
 ## UI / UX
@@ -399,6 +325,8 @@ The UX feels smooth and structured. There are not too many effects, which makes 
 
 # Mega Moolah
 
+By Jeong
+
 : couldn't find in the app store or web store (So, found the reviews of the game)
 
 Maker: Microgaming
@@ -425,6 +353,8 @@ Theme: Africa Safari (Using a lot of animal symbols)
 ---
 
 # 88 Fortunes
+
+By Jeremy
 
 Maker: Bally Technologies
 
@@ -466,6 +396,8 @@ UI:
 ---
 
 # Blood Suckers
+
+By Aidan
 
 Maker: NetEnt
 
@@ -513,6 +445,8 @@ UI:
 
 #### Xtreme Slots: Vegas Casino (Category: Casino)
 
+By Jiangxi
+
 - Maker: Meme, Inc
 - Over 1,500 reviews 4.5/5
   [Xtreme1](https://github.com/user-attachments/assets/c44ce91f-b1db-4c3f-bc17-8cc3b5c33899)
@@ -535,6 +469,8 @@ Good Reviews:
 ---
 
 #### Cash Frenzy - Slots Casino (Category: Casino)
+
+By Stephanie
 
 - Maker: SpinX Games Limited
 - Over 1,500 reviews 4.8/5
