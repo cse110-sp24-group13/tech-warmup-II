@@ -3,18 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Slot Machine v1</title>
+    <title>Blackbeard's Bounty</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app">
-      <h1>Slot Machine v1</h1>
+      <header class="app-header">
+        <h1>Blackbeard's Bounty</h1>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">
+          Switch to Light Mode
+        </button>
+      </header>
 
       <section class="machine" aria-label="Slot machine">
-        <div class="reels" id="reels" aria-live="polite">
-          <div class="reel" data-reel="0">🍒</div>
-          <div class="reel" data-reel="1">🍋</div>
-          <div class="reel" data-reel="2">🔔</div>
+        <div class="machine-layout">
+          <div class="reels" id="reels" aria-live="polite">
+            <div class="reel" data-reel="0">
+              <div class="reel-cylinder">
+                <span class="reel-symbol">🍒</span>
+              </div>
+            </div>
+
+            <div class="reel" data-reel="1">
+              <div class="reel-cylinder">
+                <span class="reel-symbol">🍋</span>
+              </div>
+            </div>
+
+            <div class="reel" data-reel="2">
+              <div class="reel-cylinder">
+                <span class="reel-symbol">🔔</span>
+              </div>
+            </div>
+          </div>
+
+          <section class="controls" aria-label="Game controls">
+            <button id="spinButton" class="spin-button" type="button" aria-label="Spin">
+              <span id="spinControlLabel" class="spin-button-label">Spin</span>
+            </button>
+          </section>
         </div>
       </section>
 
@@ -24,9 +51,6 @@
         <p id="result" class="result">Press Spin to play.</p>
       </section>
 
-      <section class="controls" aria-label="Game controls">
-        <button id="spinButton" type="button">Spin</button>
-      </section>
     </main>
 
     <script src="js/config.js" defer></script>

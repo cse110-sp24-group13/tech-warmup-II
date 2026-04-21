@@ -1,10 +1,14 @@
 class SlotMachineUI {
   constructor() {
     this.reelElements = Array.from(document.querySelectorAll(".reel"));
+    this.reelSymbolElements = this.reelElements.map((reel) => reel.querySelector(".reel-symbol"));
     this.balanceElement = document.getElementById("balance");
     this.betElement = document.getElementById("bet");
     this.resultElement = document.getElementById("result");
     this.spinButton = document.getElementById("spinButton");
+    this.spinControlLabel = document.getElementById("spinControlLabel");
+    this.themeToggleButton = document.getElementById("themeToggle");
+    this.currentTheme = "dark";
   }
 
   formatMoney(value) {
@@ -12,9 +16,39 @@ class SlotMachineUI {
   }
 
   renderReels(reels) {
-    this.reelElements.forEach((reelElement, index) => {
-      reelElement.textContent = reels[index] || "❔";
+    this.reelSymbolElements.forEach((reelSymbolElement, index) => {
+      if (reelSymbolElement) {
+        reelSymbolElement.textContent = reels[index] || "❔";
+      }
     });
+  }
+
+  renderSingleReel(index, symbol) {
+    const reelSymbolElement = this.reelSymbolElements[index];
+
+    if (reelSymbolElement) {
+      reelSymbolElement.textContent = symbol || "❔";
+    }
+  }
+
+  startSpinning() {
+    this.reelElements.forEach((reelElement) => {
+      reelElement.classList.add("is-spinning");
+    });
+  }
+
+  stopSpinning() {
+    this.reelElements.forEach((reelElement) => {
+      reelElement.classList.remove("is-spinning");
+    });
+  }
+
+  stopSingleReel(index) {
+    const reelElement = this.reelElements[index];
+
+    if (reelElement) {
+      reelElement.classList.remove("is-spinning");
+    }
   }
 
   renderBalance(balance) {
@@ -27,18 +61,31 @@ class SlotMachineUI {
 
   setSpinButtonState({ canSpin, isSpinning, noBalance }) {
     this.spinButton.disabled = !canSpin;
+    this.spinButton.classList.toggle("is-spinning", isSpinning);
+    this.spinButton.classList.toggle("is-disabled", !canSpin);
+
+    const setLabel = (value) => {
+      if (this.spinControlLabel) {
+        this.spinControlLabel.textContent = value;
+      } else {
+        this.spinButton.textContent = value;
+      }
+    };
 
     if (isSpinning) {
-      this.spinButton.textContent = "Spinning...";
+      this.spinButton.setAttribute("aria-label", "Spin in progress");
+      setLabel("Spinning...");
       return;
     }
 
     if (noBalance) {
-      this.spinButton.textContent = "No Balance";
+      this.spinButton.setAttribute("aria-label", "No balance");
+      setLabel("No Balance");
       return;
     }
 
-    this.spinButton.textContent = "Spin";
+    this.spinButton.setAttribute("aria-label", "Spin");
+    setLabel("Spin");
   }
 
   showResult(message, type = "neutral") {
@@ -52,6 +99,22 @@ class SlotMachineUI {
     if (type === "loss") {
       this.resultElement.classList.add("loss");
     }
+  }
+
+  setTheme(theme) {
+    const nextTheme = theme === "light" ? "light" : "dark";
+    this.currentTheme = nextTheme;
+    document.body.dataset.theme = nextTheme;
+
+    if (this.themeToggleButton) {
+      this.themeToggleButton.textContent =
+        nextTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+      this.themeToggleButton.setAttribute("aria-pressed", String(nextTheme === "dark"));
+    }
+  }
+
+  getTheme() {
+    return this.currentTheme;
   }
 }
 

@@ -1,4 +1,4 @@
 # First Prompt Run
 We tried the first prompt on both codex and claude to see if either model could output a functioning slot machine, however both models failed to do so. Because of this, we went ahead and slightly modified the prompt to be simpler and increased the reasoning from medium to high on the chosen Codex model to see a better output. On the second run, we landed on an okay model to work with, and made small feature improvements to fix up the first layer of the functioning machine.
 features that needed revisions:
-1. the spin button was not spinning the machine, so it took a prompt specifying that this feature was not working properly for the model to go in and modify it.
+1. the spin button was not spinning the machine, so it took a prompt specifying that this feature was not working properly for the model to go in and modify it. this took one prompt (”the spin button doesn’t work properly”), and the model was able to target the feature and adjust accordingly. Once this feature worked, the slot machine was functioning properly.
