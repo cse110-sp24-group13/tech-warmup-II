@@ -75,7 +75,7 @@ During development, we encountered several challenges:
 
 ### AI-related issues
 - Often misunderstood prompts, so they had to be adjusted/modified to be more specific, smaller requests.
-- AI idn't quite understand win-rates in a typical gambing setting, so that also had to be adjusted. 
+- AI didn't quite understand win-rates in a typical gambing setting, so that also had to be adjusted. 
 
 ### Engineering challenges
 - Adjusting how rewarding the slot machine
