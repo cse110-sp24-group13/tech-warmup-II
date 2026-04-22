@@ -3,8 +3,8 @@ const ui = new SlotMachineUI();
 const THEME_STORAGE_KEY = "slot-machine-theme";
 const COLUMN_START_DELAY_MS = 70;
 const COLUMN_STOP_DELAY_MS = 85;
-const SYMBOL_ICON_BY_ID = Object.fromEntries(
-  GAME_CONFIG.symbols.map((symbol) => [symbol.id, symbol.icon])
+const SYMBOL_BY_ID = Object.fromEntries(
+  GAME_CONFIG.symbols.map((symbol) => [symbol.id, symbol])
 );
 let spinInteractionLocked = false;
 
@@ -30,11 +30,17 @@ function initialize() {
     columnCount: GAME_CONFIG.columnCount,
     rowCount: GAME_CONFIG.rowCount,
     symbols: machine.buildRandomReels().flat(),
-    symbolMap: SYMBOL_ICON_BY_ID,
+    symbolMap: SYMBOL_BY_ID,
   });
   const state = machine.getState();
   ui.renderBalance(state.balance);
   ui.renderBet(state.fixedBet);
+  ui.renderRules({
+    columnCount: GAME_CONFIG.columnCount,
+    rowCount: GAME_CONFIG.rowCount,
+    fixedBet: state.fixedBet,
+    symbols: GAME_CONFIG.symbols,
+  });
   updateSpinAvailability();
 }
 
@@ -198,7 +204,23 @@ async function handleSpin() {
 }
 
 ui.spinButton.addEventListener("click", handleSpin);
+if (ui.leverButton) {
+  ui.leverButton.addEventListener("click", () => {
+    ui.animateLeverPull();
+    handleSpin();
+  });
+}
 if (ui.themeToggleButton) {
   ui.themeToggleButton.addEventListener("click", handleThemeToggle);
+}
+if (ui.rulesButton) {
+  ui.rulesButton.addEventListener("click", () => {
+    ui.openRules();
+  });
+}
+if (ui.closeRulesButton) {
+  ui.closeRulesButton.addEventListener("click", () => {
+    ui.closeRules();
+  });
 }
 initialize();

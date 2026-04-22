@@ -9,9 +9,20 @@ class SlotMachineUI {
     this.boardSizeElement = document.getElementById("boardSize");
     this.resultElement = document.getElementById("result");
     this.spinButton = document.getElementById("spinButton");
+    this.leverButton = document.getElementById("leverButton");
     this.spinControlLabel = document.getElementById("spinControlLabel");
     this.themeToggleButton = document.getElementById("themeToggle");
+    this.rulesButton = document.getElementById("rulesButton");
+    this.rulesDialog = document.getElementById("rulesDialog");
+    this.closeRulesButton = document.getElementById("closeRulesButton");
+    this.rulesBoardSizeElement = document.getElementById("rulesBoardSize");
+    this.rulesFixedBetElement = document.getElementById("rulesFixedBet");
+    this.rulesPayoutRowsElement = document.getElementById("rulesPayoutRows");
     this.currentTheme = "dark";
+    this.leverPullTimeoutId = null;
+    this.handleRulesDialogClick = this.handleRulesDialogClick.bind(this);
+    this.handleRulesDialogClosed = this.handleRulesDialogClosed.bind(this);
+    this.setupRulesDialog();
   }
 
   formatMoney(value) {
@@ -23,12 +34,104 @@ class SlotMachineUI {
     }).format(value);
   }
 
-  getSymbolGlyph(symbolId) {
-    if (!symbolId) {
-      return "";
+  setupRulesDialog() {
+    if (!this.rulesDialog) {
+      return;
     }
 
-    return this.symbolLookup.get(symbolId) || symbolId;
+    this.rulesDialog.addEventListener("click", this.handleRulesDialogClick);
+    this.rulesDialog.addEventListener("close", this.handleRulesDialogClosed);
+  }
+
+  formatSymbolName(symbolId) {
+    return symbolId
+      .split("-")
+      .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+      .join(" ");
+  }
+
+  renderRules({ columnCount, rowCount, fixedBet, symbols = [] }) {
+    if (this.rulesBoardSizeElement) {
+      this.rulesBoardSizeElement.textContent = `${columnCount} x ${rowCount}`;
+    }
+
+    if (this.rulesFixedBetElement) {
+      this.rulesFixedBetElement.textContent = this.formatMoney(fixedBet);
+    }
+
+    if (!this.rulesPayoutRowsElement) {
+      return;
+    }
+
+    this.rulesPayoutRowsElement.innerHTML = "";
+
+    symbols.forEach((symbol) => {
+      const row = document.createElement("tr");
+      const minimumPayout = this.formatMoney(fixedBet * symbol.baseMultiplier);
+      const extraPayout = this.formatMoney(fixedBet * symbol.extraMultiplier);
+      const symbolLabel = symbol.icon ? `${symbol.icon} ${this.formatSymbolName(symbol.id)}` : symbol.id;
+
+      row.innerHTML = `
+        <td class="rules-symbol">${symbolLabel}</td>
+        <td>${symbol.minCount}</td>
+        <td>${minimumPayout}</td>
+        <td>+${extraPayout}</td>
+      `;
+      this.rulesPayoutRowsElement.append(row);
+    });
+  }
+
+  openRules() {
+    if (!this.rulesDialog || this.rulesDialog.open) {
+      return;
+    }
+
+    if (typeof this.rulesDialog.showModal === "function") {
+      this.rulesDialog.showModal();
+    } else {
+      this.rulesDialog.setAttribute("open", "open");
+    }
+
+    document.body.classList.add("is-modal-open");
+    if (this.rulesButton) {
+      this.rulesButton.setAttribute("aria-expanded", "true");
+    }
+  }
+
+  closeRules() {
+    if (!this.rulesDialog) {
+      return;
+    }
+
+    if (this.rulesDialog.open && typeof this.rulesDialog.close === "function") {
+      this.rulesDialog.close();
+      return;
+    }
+
+    this.rulesDialog.removeAttribute("open");
+    this.handleRulesDialogClosed();
+  }
+
+  handleRulesDialogClick(event) {
+    if (event.target === this.rulesDialog) {
+      this.closeRules();
+    }
+  }
+
+  handleRulesDialogClosed() {
+    document.body.classList.remove("is-modal-open");
+
+    if (this.rulesButton) {
+      this.rulesButton.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  getSymbolConfig(symbolId) {
+    if (!symbolId) {
+      return null;
+    }
+
+    return this.symbolLookup.get(symbolId) || null;
   }
 
   setCellSymbol(reelSymbolElement, symbolId) {
@@ -37,7 +140,22 @@ class SlotMachineUI {
     }
 
     const hasSymbol = Boolean(symbolId);
-    reelSymbolElement.textContent = hasSymbol ? this.getSymbolGlyph(symbolId) : "";
+    const symbolConfig = hasSymbol ? this.getSymbolConfig(symbolId) : null;
+    const symbolGlyph = symbolConfig?.icon || symbolId || "";
+    const symbolImage = symbolConfig?.image || "";
+
+    if (hasSymbol && symbolImage) {
+      reelSymbolElement.textContent = "";
+      reelSymbolElement.style.setProperty("--symbol-image", `url("${symbolImage}")`);
+      reelSymbolElement.classList.add("has-image");
+      reelSymbolElement.setAttribute("aria-label", symbolId);
+    } else {
+      reelSymbolElement.textContent = hasSymbol ? symbolGlyph : "";
+      reelSymbolElement.style.removeProperty("--symbol-image");
+      reelSymbolElement.classList.remove("has-image");
+      reelSymbolElement.removeAttribute("aria-label");
+    }
+
     reelSymbolElement.dataset.symbolId = hasSymbol ? symbolId : "";
     reelSymbolElement.classList.toggle("is-empty", !hasSymbol);
   }
@@ -201,6 +319,12 @@ class SlotMachineUI {
     this.spinButton.classList.toggle("is-spinning", isSpinning);
     this.spinButton.classList.toggle("is-disabled", !canSpin);
 
+    if (this.leverButton) {
+      this.leverButton.disabled = !canSpin;
+      this.leverButton.classList.toggle("is-spinning", isSpinning);
+      this.leverButton.classList.toggle("is-disabled", !canSpin);
+    }
+
     const setLabel = (value) => {
       if (this.spinControlLabel) {
         this.spinControlLabel.textContent = value;
@@ -211,18 +335,45 @@ class SlotMachineUI {
 
     if (isSpinning) {
       this.spinButton.setAttribute("aria-label", "Spin in progress");
+      if (this.leverButton) {
+        this.leverButton.setAttribute("aria-label", "Lever in motion");
+      }
       setLabel("Spinning...");
       return;
     }
 
     if (noBalance) {
       this.spinButton.setAttribute("aria-label", "No balance");
+      if (this.leverButton) {
+        this.leverButton.setAttribute("aria-label", "Lever unavailable: no balance");
+      }
       setLabel("No Balance");
       return;
     }
 
     this.spinButton.setAttribute("aria-label", "Spin");
+    if (this.leverButton) {
+      this.leverButton.setAttribute("aria-label", "Pull lever to spin");
+    }
     setLabel("Spin");
+  }
+
+  animateLeverPull() {
+    if (!this.leverButton || this.leverButton.disabled) {
+      return;
+    }
+
+    if (this.leverPullTimeoutId !== null) {
+      clearTimeout(this.leverPullTimeoutId);
+    }
+
+    this.leverButton.classList.remove("is-pulled");
+    void this.leverButton.offsetWidth;
+    this.leverButton.classList.add("is-pulled");
+    this.leverPullTimeoutId = setTimeout(() => {
+      this.leverButton.classList.remove("is-pulled");
+      this.leverPullTimeoutId = null;
+    }, 360);
   }
 
   showResult(message, type = "neutral") {

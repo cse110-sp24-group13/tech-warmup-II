@@ -7,32 +7,113 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="pirate-beach-scene" aria-hidden="true">
+      <div class="scene-sky"></div>
+      <div class="scene-clouds"></div>
+      <div class="scene-sun"></div>
+      <div class="scene-ocean"></div>
+      <div class="scene-wave scene-wave-mid"></div>
+      <div class="scene-wave scene-wave-near"></div>
+      <div class="scene-island"></div>
+      <div class="scene-ship">
+        <span class="scene-ship-sail"></span>
+        <span class="scene-ship-flag">☠</span>
+      </div>
+      <div class="scene-sand"></div>
+      <div class="scene-palm"></div>
+    </div>
+
     <main class="app">
       <header class="app-header">
         <h1>Blackbeard's Bounty</h1>
-        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">
-          Switch to Light Mode
-        </button>
+        <div class="header-actions">
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">
+            Switch to Light Mode
+          </button>
+          <button
+            id="rulesButton"
+            class="theme-toggle rules-toggle"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="rulesDialog"
+            aria-expanded="false"
+          >
+            Rules
+          </button>
+        </div>
       </header>
 
       <section class="machine" aria-label="Slot machine">
         <div class="machine-layout">
-          <div class="reels" id="reels" aria-live="polite"></div>
+          <div class="machine-main">
+            <div class="reels" id="reels" aria-live="polite"></div>
 
-          <section class="controls" aria-label="Game controls">
-            <button id="spinButton" class="spin-button" type="button" aria-label="Spin">
-              <span id="spinControlLabel" class="spin-button-label">Spin</span>
-            </button>
-          </section>
+            <section class="controls" aria-label="Game controls">
+              <div class="controls-info">
+                <p>Balance: <strong id="balance">$0</strong></p>
+                <p>Fixed Bet: <strong id="bet">$0</strong></p>
+                <p>Board Size: <strong id="boardSize">6 x 5</strong></p>
+                <p id="result" class="result">Press Spin to play.</p>
+              </div>
+              <button id="spinButton" class="spin-button" type="button" aria-label="Spin">
+                <span id="spinControlLabel" class="spin-button-label">Spin</span>
+              </button>
+            </section>
+          </div>
+
+          <button
+            id="leverButton"
+            class="machine-lever"
+            type="button"
+            aria-label="Pull lever to spin"
+          >
+            <span class="machine-lever-track" aria-hidden="true">
+              <span class="machine-lever-stem"></span>
+              <span class="machine-lever-knob"></span>
+            </span>
+            <span class="machine-lever-base" aria-hidden="true"></span>
+            <span class="machine-lever-shadow" aria-hidden="true"></span>
+          </button>
         </div>
       </section>
 
-      <section class="status" aria-label="Game status">
-        <p>Balance: <strong id="balance">$0</strong></p>
-        <p>Fixed Bet: <strong id="bet">$0</strong></p>
-        <p>Board Size: <strong id="boardSize">6 x 5</strong></p>
-        <p id="result" class="result">Press Spin to play.</p>
-      </section>
+      <dialog id="rulesDialog" class="rules-dialog" aria-labelledby="rulesTitle">
+        <section class="rules-panel">
+          <header class="rules-header">
+            <h2 id="rulesTitle">Game Rules</h2>
+            <button id="closeRulesButton" class="rules-close-button" type="button" aria-label="Close rules">
+              Close
+            </button>
+          </header>
+
+          <p class="rules-summary">
+            Spin a <strong id="rulesBoardSize">6 x 5</strong> board for a fixed bet of
+            <strong id="rulesFixedBet">$0.00</strong>.
+          </p>
+
+          <ol class="rules-list">
+            <li>Any symbol that appears at least its minimum count pays instantly.</li>
+            <li>Winning symbols clear, new symbols tumble in, and wins can chain.</li>
+            <li>Each extra matching symbol increases that symbol's payout.</li>
+            <li>Cascades stop once no symbols meet their minimum count.</li>
+          </ol>
+
+          <h3 class="rules-table-title">Payout Guide (Per Spin)</h3>
+          <div class="rules-table-wrap">
+            <table class="rules-table">
+              <thead>
+                <tr>
+                  <th scope="col">Symbol</th>
+                  <th scope="col">Min Count</th>
+                  <th scope="col">Base Payout</th>
+                  <th scope="col">Extra / Symbol</th>
+                </tr>
+              </thead>
+              <tbody id="rulesPayoutRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </dialog>
 
     </main>
 
