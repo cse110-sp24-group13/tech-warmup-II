@@ -1,14 +1,48 @@
-const MAX_CASCADES_PER_SPIN = 20;
+﻿const MAX_CASCADES_PER_SPIN = 20;
 
 class SlotMachine {
-  constructor({ initialBalance, fixedBet, columnCount, rowCount, symbols }) {
+  constructor({ initialBalance, columnCount, rowCount, modes, defaultMode }) {
     this.balance = initialBalance;
-    this.fixedBet = fixedBet;
     this.columnCount = columnCount;
     this.rowCount = rowCount;
-    this.symbols = symbols;
-    this.totalSymbolWeight = symbols.reduce((sum, symbol) => sum + symbol.weight, 0);
+    this.modes = modes;
     this.isSpinning = false;
+    this.modeKey = "";
+    this.modeConfig = null;
+    this.fixedBet = 0;
+    this.symbols = [];
+    this.totalSymbolWeight = 0;
+    this.setMode(defaultMode);
+  }
+
+  getModeConfig(modeKey) {
+    if (this.modes[modeKey]) {
+      return this.modes[modeKey];
+    }
+
+    const [firstModeKey] = Object.keys(this.modes);
+    return this.modes[firstModeKey];
+  }
+
+  getCurrentModeConfig() {
+    return this.modeConfig;
+  }
+
+  setMode(modeKey) {
+    if (this.isSpinning) {
+      throw new Error("Cannot change mode during a spin.");
+    }
+
+    const nextModeConfig = this.getModeConfig(modeKey);
+    const nextModeKey = Object.entries(this.modes).find(([, config]) => config === nextModeConfig)?.[0] || modeKey;
+
+    this.modeKey = nextModeKey;
+    this.modeConfig = nextModeConfig;
+    this.fixedBet = nextModeConfig.fixedBet;
+    this.symbols = nextModeConfig.symbols;
+    this.totalSymbolWeight = this.symbols.reduce((sum, symbol) => sum + symbol.weight, 0);
+
+    return this.getState();
   }
 
   getState() {
@@ -16,6 +50,8 @@ class SlotMachine {
       balance: this.balance,
       fixedBet: this.fixedBet,
       isSpinning: this.isSpinning,
+      modeKey: this.modeKey,
+      modeLabel: this.modeConfig?.label || "",
     };
   }
 
@@ -112,7 +148,6 @@ class SlotMachine {
     const nextBoard = this.cloneBoard(board);
     const matchedIndexSet = new Set(matchedIndexes);
 
-    // Rebuild each column bottom-up, keeping non-winning symbols and filling from the top.
     for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex += 1) {
       const remainingSymbols = [];
 
@@ -162,13 +197,15 @@ class SlotMachine {
 
     await this.wait(durationMs);
 
+    const settledFixedBet = this.fixedBet;
+    const settledModeKey = this.modeKey;
+    const settledModeLabel = this.modeConfig?.label || "";
     const reels = this.buildRandomReels();
     let board = this.cloneBoard(reels);
     let totalPayout = 0;
     let cascadeIndex = 0;
     const cascades = [];
 
-    // Hard cap prevents pathological loops in case of unexpected config changes.
     while (cascadeIndex < MAX_CASCADES_PER_SPIN) {
       const wins = this.getWinningGroups(board);
 
@@ -208,8 +245,11 @@ class SlotMachine {
       cascades,
       totalPayout,
       didWin: totalPayout > 0,
-      netChange: this.roundMoney(totalPayout - this.fixedBet),
+      netChange: this.roundMoney(totalPayout - settledFixedBet),
       balance: this.balance,
+      fixedBet: settledFixedBet,
+      modeKey: settledModeKey,
+      modeLabel: settledModeLabel,
     };
   }
 }

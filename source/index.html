@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,7 +17,7 @@
       <div class="scene-island"></div>
       <div class="scene-ship">
         <span class="scene-ship-sail"></span>
-        <span class="scene-ship-flag">☠</span>
+        <span class="scene-ship-flag">&#9760;</span>
       </div>
       <div class="scene-sand"></div>
       <div class="scene-palm"></div>
@@ -27,6 +27,9 @@
       <header class="app-header">
         <h1>Blackbeard's Bounty</h1>
         <div class="header-actions">
+          <button id="modeToggleButton" class="theme-toggle mode-toggle" type="button" aria-pressed="false">
+            Switch to Hard Mode
+          </button>
           <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">
             Switch to Light Mode
           </button>
@@ -50,6 +53,7 @@
 
             <section class="controls" aria-label="Game controls">
               <div class="controls-info">
+                <p>Mode: <strong id="modeLabel">Easy</strong></p>
                 <p>Balance: <strong id="balance">$0</strong></p>
                 <p>Fixed Bet: <strong id="bet">$0</strong></p>
                 <p>Board Size: <strong id="boardSize">6 x 5</strong></p>
@@ -86,7 +90,7 @@
           </header>
 
           <p class="rules-summary">
-            Spin a <strong id="rulesBoardSize">6 x 5</strong> board for a fixed bet of
+            Spin a <strong id="rulesBoardSize">6 x 5</strong> board in <strong id="rulesModeLabel">Easy</strong> mode for a fixed bet of
             <strong id="rulesFixedBet">$0.00</strong>.
           </p>
 
@@ -113,7 +117,6 @@
           </div>
         </section>
       </dialog>
-
     </main>
 
     <section id="winCelebration" class="win-celebration" aria-live="polite" aria-atomic="true">

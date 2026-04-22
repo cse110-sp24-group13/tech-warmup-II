@@ -1,15 +1,31 @@
-const machine = new SlotMachine(GAME_CONFIG);
+﻿const machine = new SlotMachine(GAME_CONFIG);
 const ui = new SlotMachineUI();
 const THEME_STORAGE_KEY = "slot-machine-theme";
 const COLUMN_START_DELAY_MS = 70;
 const COLUMN_STOP_DELAY_MS = 85;
 const LEVER_PULL_DISTANCE_PX = 120;
 const LEVER_TRIGGER_THRESHOLD = 0.58;
-const SYMBOL_BY_ID = Object.fromEntries(GAME_CONFIG.symbols.map((symbol) => [symbol.id, symbol]));
+const MODE_BUTTON_LABELS = {
+  easy: "Switch to Hard Mode",
+  hard: "Return to Easy Mode",
+};
+const MODE_STATUS_MESSAGES = {
+  easy: "Easy mode active: $10 spins with steadier, lower-volatility payouts.",
+  hard:
+    "Hard mode active: $100 spins, tougher hit rates, but bigger multipliers.",
+};
 let spinInteractionLocked = false;
 
 function sleep(durationMs) {
   return new Promise((resolve) => setTimeout(resolve, durationMs));
+}
+
+function getCurrentModeConfig() {
+  return machine.getCurrentModeConfig();
+}
+
+function buildSymbolMap(symbols) {
+  return Object.fromEntries(symbols.map((symbol) => [symbol.id, symbol]));
 }
 
 function updateSpinAvailability() {
@@ -20,6 +36,7 @@ function updateSpinAvailability() {
     isSpinning,
     noBalance: balance < fixedBet,
   });
+  ui.setModeButtonState({ isDisabled: spinInteractionLocked || isSpinning });
 }
 
 function getInitialTheme() {
@@ -32,28 +49,39 @@ function getInitialTheme() {
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
 
-function initializeBoardAndStats() {
-  ui.buildBoard({
-    columnCount: GAME_CONFIG.columnCount,
-    rowCount: GAME_CONFIG.rowCount,
-    symbols: machine.buildRandomReels().flat(),
-    symbolMap: SYMBOL_BY_ID,
-  });
+function renderCurrentMode({ refreshBoard } = { refreshBoard: false }) {
+  const modeConfig = getCurrentModeConfig();
+  const state = machine.getState();
 
-  const { balance, fixedBet } = machine.getState();
-  ui.renderBalance(balance);
-  ui.renderBet(fixedBet);
+  if (refreshBoard) {
+    ui.buildBoard({
+      columnCount: GAME_CONFIG.columnCount,
+      rowCount: GAME_CONFIG.rowCount,
+      symbols: machine.buildRandomReels().flat(),
+      symbolMap: buildSymbolMap(modeConfig.symbols),
+    });
+  }
+
+  ui.renderMode({
+    modeLabel: modeConfig.label,
+    buttonLabel: MODE_BUTTON_LABELS[state.modeKey],
+    isHardMode: state.modeKey === "hard",
+  });
+  ui.renderBalance(state.balance);
+  ui.renderBet(state.fixedBet);
   ui.renderRules({
     columnCount: GAME_CONFIG.columnCount,
     rowCount: GAME_CONFIG.rowCount,
-    fixedBet,
-    symbols: GAME_CONFIG.symbols,
+    fixedBet: state.fixedBet,
+    symbols: modeConfig.symbols,
+    modeLabel: modeConfig.label,
   });
 }
 
 function initialize() {
   ui.setTheme(getInitialTheme());
-  initializeBoardAndStats();
+  renderCurrentMode({ refreshBoard: true });
+  ui.showResult("Press Spin to play.", "neutral");
   updateSpinAvailability();
 }
 
@@ -61,6 +89,27 @@ function handleThemeToggle() {
   const nextTheme = ui.getTheme() === "dark" ? "light" : "dark";
   ui.setTheme(nextTheme);
   localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+}
+
+function handleModeToggle() {
+  if (spinInteractionLocked || machine.getState().isSpinning) {
+    return;
+  }
+
+  const nextModeKey = machine.getState().modeKey === "hard" ? "easy" : "hard";
+  machine.setMode(nextModeKey);
+  renderCurrentMode({ refreshBoard: true });
+  updateSpinAvailability();
+
+  if (!machine.canSpin()) {
+    ui.showResult(
+      `${MODE_STATUS_MESSAGES[nextModeKey]} You need ${ui.formatMoney(machine.getState().fixedBet)} to spin.`,
+      "loss"
+    );
+    return;
+  }
+
+  ui.showResult(MODE_STATUS_MESSAGES[nextModeKey], nextModeKey === "hard" ? "loss" : "neutral");
 }
 
 function getColumnCellIndexes(columnIndex) {
@@ -71,8 +120,9 @@ function getColumnCellIndexes(columnIndex) {
 }
 
 function getRandomSymbolId() {
-  const randomIndex = Math.floor(Math.random() * GAME_CONFIG.symbols.length);
-  return GAME_CONFIG.symbols[randomIndex].id;
+  const symbols = getCurrentModeConfig().symbols;
+  const randomIndex = Math.floor(Math.random() * symbols.length);
+  return symbols[randomIndex].id;
 }
 
 function startReelAnimation(activeCellIndexes) {
@@ -84,7 +134,6 @@ function startReelAnimation(activeCellIndexes) {
 }
 
 async function startColumnsLeftToRight(activeCellIndexes) {
-  // Stagger reel start by column to create a sweep effect before the spin resolves.
   for (let columnIndex = 0; columnIndex < GAME_CONFIG.columnCount; columnIndex += 1) {
     const cellIndexes = getColumnCellIndexes(columnIndex);
 
@@ -122,7 +171,7 @@ function getSpinValidationMessage() {
   }
 
   if (balance < fixedBet) {
-    return "Not enough balance to spin.";
+    return `Not enough balance for a ${ui.formatMoney(fixedBet)} spin.`;
   }
 
   return "Cannot spin right now.";
@@ -153,12 +202,12 @@ async function playCascades(outcome) {
 }
 
 function showRoundSummary(outcome) {
-  if (outcome.didWin) {
-    ui.showWinCelebration(outcome.totalPayout, GAME_CONFIG.fixedBet);
+  if (outcome.netChange > 0) {
+    ui.showWinCelebration(outcome.totalPayout, outcome.fixedBet);
     const netPrefix = outcome.netChange >= 0 ? "+" : "";
     const tumbleSuffix = outcome.cascades.length === 1 ? "" : "s";
     ui.showResult(
-      `WIN! Total tumble win: ${ui.formatMoney(outcome.totalPayout)} (${netPrefix}${ui.formatMoney(
+      `${outcome.modeLabel} WIN! Total tumble win: ${ui.formatMoney(outcome.totalPayout)} (${netPrefix}${ui.formatMoney(
         outcome.netChange
       )} net) across ${outcome.cascades.length} tumble${tumbleSuffix}.`,
       "win"
@@ -166,8 +215,19 @@ function showRoundSummary(outcome) {
     return;
   }
 
+  if (outcome.didWin) {
+    const tumbleSuffix = outcome.cascades.length === 1 ? "" : "s";
+    ui.showResult(
+      `${outcome.modeLabel} RETURN. Total tumble win: ${ui.formatMoney(outcome.totalPayout)} (${ui.formatMoney(
+        outcome.netChange
+      )} net) across ${outcome.cascades.length} tumble${tumbleSuffix}.`,
+      "neutral"
+    );
+    return;
+  }
+
   ui.showResult(
-    "LOSS. Hit a symbol's minimum count anywhere on the board to trigger a tumble win.",
+    `${outcome.modeLabel} LOSS. Hit a symbol's minimum count anywhere on the board to trigger a tumble win.`,
     "loss"
   );
 }
@@ -230,10 +290,14 @@ async function handleSpin() {
     spinInteractionLocked = false;
     ui.stopSpinning();
     ui.clearBoardEffects();
+    renderCurrentMode();
     updateSpinAvailability();
 
-    if (!machine.canSpin() && machine.getState().balance < GAME_CONFIG.fixedBet) {
-      ui.showResult("Game over: balance too low for next spin.", "loss");
+    if (!machine.canSpin() && machine.getState().balance < machine.getState().fixedBet) {
+      ui.showResult(
+        `Game over for ${machine.getState().modeLabel.toLowerCase()} mode: balance too low for the next spin.`,
+        "loss"
+      );
     }
   }
 }
@@ -309,6 +373,10 @@ function registerEventHandlers() {
     });
   }
 
+  if (ui.modeToggleButton) {
+    ui.modeToggleButton.addEventListener("click", handleModeToggle);
+  }
+
   if (ui.themeToggleButton) {
     ui.themeToggleButton.addEventListener("click", handleThemeToggle);
   }
@@ -328,3 +396,4 @@ function registerEventHandlers() {
 
 registerEventHandlers();
 initialize();
+

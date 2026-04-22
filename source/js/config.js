@@ -1,8 +1,6 @@
-const GAME_CONFIG = {
-  initialBalance: 100,
+﻿const EASY_MODE = {
+  label: "Easy",
   fixedBet: 10,
-  columnCount: 6,
-  rowCount: 5,
   symbols: [
     {
       id: "ten",
@@ -42,7 +40,7 @@ const GAME_CONFIG = {
     },
     {
       id: "anchor",
-      icon: "⚓",
+      icon: "Anc",
       image: "assets/icons/anchor.png",
       weight: 12,
       minCount: 7,
@@ -51,7 +49,7 @@ const GAME_CONFIG = {
     },
     {
       id: "cannon",
-      icon: "💣",
+      icon: "Can",
       image: "assets/icons/cannon.png",
       weight: 10,
       minCount: 7,
@@ -60,7 +58,7 @@ const GAME_CONFIG = {
     },
     {
       id: "skull-coin",
-      icon: "☠️",
+      icon: "Skull",
       image: "assets/icons/skull-coin.png",
       weight: 8,
       minCount: 7,
@@ -68,6 +66,87 @@ const GAME_CONFIG = {
       extraMultiplier: 0.072,
     },
   ],
+};
+
+const HARD_MODE = {
+  label: "Hard",
+  fixedBet: 100,
+  symbols: [
+    {
+      id: "ten",
+      icon: "10",
+      image: "assets/icons/number-10.png",
+      weight: 26,
+      minCount: 8,
+      baseMultiplier: 0.111,
+      extraMultiplier: 0.025,
+    },
+    {
+      id: "queen",
+      icon: "Q",
+      image: "assets/icons/letter-q.png",
+      weight: 20,
+      minCount: 8,
+      baseMultiplier: 0.171,
+      extraMultiplier: 0.038,
+    },
+    {
+      id: "king",
+      icon: "K",
+      image: "assets/icons/letter-k.png",
+      weight: 15,
+      minCount: 8,
+      baseMultiplier: 0.262,
+      extraMultiplier: 0.056,
+    },
+    {
+      id: "ace",
+      icon: "A",
+      image: "assets/icons/letter-a.png",
+      weight: 11,
+      minCount: 8,
+      baseMultiplier: 0.393,
+      extraMultiplier: 0.081,
+    },
+    {
+      id: "anchor",
+      icon: "Anc",
+      image: "assets/icons/anchor.png",
+      weight: 8,
+      minCount: 9,
+      baseMultiplier: 0.681,
+      extraMultiplier: 0.131,
+    },
+    {
+      id: "cannon",
+      icon: "Can",
+      image: "assets/icons/cannon.png",
+      weight: 5,
+      minCount: 9,
+      baseMultiplier: 1.21,
+      extraMultiplier: 0.242,
+    },
+    {
+      id: "skull-coin",
+      icon: "Skull",
+      image: "assets/icons/skull-coin.png",
+      weight: 3,
+      minCount: 10,
+      baseMultiplier: 2.772,
+      extraMultiplier: 0.554,
+    },
+  ],
+};
+
+const GAME_CONFIG = {
+  initialBalance: 300,
+  defaultMode: "easy",
+  columnCount: 6,
+  rowCount: 5,
+  modes: {
+    easy: EASY_MODE,
+    hard: HARD_MODE,
+  },
   spinDurationMs: 900,
   animationTickMs: 120,
   winFlashMs: 650,
@@ -77,3 +156,6 @@ const GAME_CONFIG = {
 };
 
 window.GAME_CONFIG = GAME_CONFIG;
+
+
+

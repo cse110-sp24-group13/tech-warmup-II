@@ -1,4 +1,4 @@
-class SlotMachineUI {
+﻿class SlotMachineUI {
   constructor() {
     this.reelsContainer = document.getElementById("reels");
     this.reelElements = [];
@@ -6,16 +6,19 @@ class SlotMachineUI {
     this.symbolLookup = new Map();
     this.balanceElement = document.getElementById("balance");
     this.betElement = document.getElementById("bet");
+    this.modeElement = document.getElementById("modeLabel");
     this.boardSizeElement = document.getElementById("boardSize");
     this.resultElement = document.getElementById("result");
     this.spinButton = document.getElementById("spinButton");
     this.leverButton = document.getElementById("leverButton");
     this.spinControlLabel = document.getElementById("spinControlLabel");
+    this.modeToggleButton = document.getElementById("modeToggleButton");
     this.themeToggleButton = document.getElementById("themeToggle");
     this.rulesButton = document.getElementById("rulesButton");
     this.rulesDialog = document.getElementById("rulesDialog");
     this.closeRulesButton = document.getElementById("closeRulesButton");
     this.rulesBoardSizeElement = document.getElementById("rulesBoardSize");
+    this.rulesModeLabelElement = document.getElementById("rulesModeLabel");
     this.rulesFixedBetElement = document.getElementById("rulesFixedBet");
     this.rulesPayoutRowsElement = document.getElementById("rulesPayoutRows");
     this.winCelebrationElement = document.getElementById("winCelebration");
@@ -320,9 +323,13 @@ class SlotMachineUI {
       .join(" ");
   }
 
-  renderRules({ columnCount, rowCount, fixedBet, symbols = [] }) {
+  renderRules({ columnCount, rowCount, fixedBet, symbols = [], modeLabel = "Easy" }) {
     if (this.rulesBoardSizeElement) {
       this.rulesBoardSizeElement.textContent = `${columnCount} x ${rowCount}`;
+    }
+
+    if (this.rulesModeLabelElement) {
+      this.rulesModeLabelElement.textContent = modeLabel;
     }
 
     if (this.rulesFixedBetElement) {
@@ -350,7 +357,6 @@ class SlotMachineUI {
       this.rulesPayoutRowsElement.append(row);
     });
   }
-
   openRules() {
     if (!this.rulesDialog || this.rulesDialog.open) {
       return;
@@ -565,6 +571,26 @@ class SlotMachineUI {
     this.markCells(indexes, "is-tumbling", false);
   }
 
+  renderMode({ modeLabel, buttonLabel, isHardMode }) {
+    if (this.modeElement) {
+      this.modeElement.textContent = modeLabel;
+    }
+
+    if (this.modeToggleButton) {
+      this.modeToggleButton.textContent = buttonLabel;
+      this.modeToggleButton.classList.toggle("is-hard", Boolean(isHardMode));
+      this.modeToggleButton.setAttribute("aria-pressed", String(Boolean(isHardMode)));
+    }
+  }
+
+  setModeButtonState({ isDisabled }) {
+    if (!this.modeToggleButton) {
+      return;
+    }
+
+    this.modeToggleButton.disabled = Boolean(isDisabled);
+  }
+
   renderBalance(balance) {
     if (this.balanceElement) {
       this.balanceElement.textContent = this.formatMoney(balance);
@@ -709,3 +735,9 @@ class SlotMachineUI {
 }
 
 window.SlotMachineUI = SlotMachineUI;
+
+
+
+
+
+
