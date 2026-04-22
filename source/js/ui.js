@@ -18,20 +18,100 @@ class SlotMachineUI {
     this.rulesBoardSizeElement = document.getElementById("rulesBoardSize");
     this.rulesFixedBetElement = document.getElementById("rulesFixedBet");
     this.rulesPayoutRowsElement = document.getElementById("rulesPayoutRows");
+    this.winCelebrationElement = document.getElementById("winCelebration");
+    this.winCelebrationAmountElement = document.getElementById("winCelebrationAmount");
+    this.coinRainElement = document.getElementById("coinRain");
+    this.currencyFormatter = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
     this.currentTheme = "dark";
     this.leverPullTimeoutId = null;
+    this.winCelebrationTimeoutId = null;
     this.handleRulesDialogClick = this.handleRulesDialogClick.bind(this);
     this.handleRulesDialogClosed = this.handleRulesDialogClosed.bind(this);
     this.setupRulesDialog();
   }
 
   formatMoney(value) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
+    return this.currencyFormatter.format(value);
+  }
+
+  wait(durationMs) {
+    return new Promise((resolve) => setTimeout(resolve, durationMs));
+  }
+
+  buildCoinElement() {
+    const coinElement = document.createElement("span");
+    coinElement.className = "coin-drop";
+    coinElement.style.setProperty("--coin-size", `${Math.floor(24 + Math.random() * 18)}px`);
+    coinElement.style.setProperty("--coin-x-start", `${Math.floor(Math.random() * 96 + 2)}vw`);
+    coinElement.style.setProperty("--coin-drift", `${Math.floor(Math.random() * 180 - 90)}px`);
+    coinElement.style.setProperty("--coin-roll", `${Math.floor(Math.random() * 140 - 70)}deg`);
+    coinElement.style.setProperty("--coin-fall-duration", `${Math.floor(1200 + Math.random() * 900)}ms`);
+    coinElement.style.setProperty("--coin-fall-delay", `${Math.floor(Math.random() * 420)}ms`);
+
+    const coinBody = document.createElement("span");
+    coinBody.className = "coin-body";
+    coinBody.style.setProperty("--coin-spin-duration", `${Math.floor(460 + Math.random() * 520)}ms`);
+    coinBody.style.setProperty("--coin-tilt-x", `${Math.floor(56 + Math.random() * 28)}deg`);
+    coinBody.style.setProperty("--coin-tilt-z", `${Math.floor(Math.random() * 40 - 20)}deg`);
+    coinBody.style.setProperty("--coin-turn", Math.random() > 0.5 ? "1turn" : "-1turn");
+
+    const frontFace = document.createElement("span");
+    frontFace.className = "coin-face coin-face-front";
+    frontFace.textContent = "$";
+
+    const edgeFace = document.createElement("span");
+    edgeFace.className = "coin-edge";
+
+    const backFace = document.createElement("span");
+    backFace.className = "coin-face coin-face-back";
+    backFace.textContent = "$";
+
+    coinBody.append(frontFace, edgeFace, backFace);
+    coinElement.append(coinBody);
+
+    return coinElement;
+  }
+
+  showWinCelebration(totalPayout) {
+    if (!this.winCelebrationElement) {
+      return;
+    }
+
+    if (this.winCelebrationTimeoutId !== null) {
+      clearTimeout(this.winCelebrationTimeoutId);
+      this.winCelebrationTimeoutId = null;
+    }
+
+    if (this.winCelebrationAmountElement) {
+      this.winCelebrationAmountElement.textContent = this.formatMoney(totalPayout);
+    }
+
+    if (this.coinRainElement) {
+      this.coinRainElement.innerHTML = "";
+
+      for (let coinIndex = 0; coinIndex < 30; coinIndex += 1) {
+        this.coinRainElement.append(this.buildCoinElement());
+      }
+    }
+
+    this.winCelebrationElement.classList.remove("is-active");
+    void this.winCelebrationElement.offsetWidth;
+    this.winCelebrationElement.classList.add("is-active");
+
+    this.winCelebrationTimeoutId = setTimeout(() => {
+      this.winCelebrationElement.classList.remove("is-active");
+
+      if (this.coinRainElement) {
+        this.coinRainElement.innerHTML = "";
+      }
+
+      this.winCelebrationTimeoutId = null;
+    }, 2800);
   }
 
   setupRulesDialog() {
@@ -218,12 +298,6 @@ class SlotMachineUI {
     this.setCellSymbol(reelSymbolElement, symbolId || null);
   }
 
-  startSpinning() {
-    this.reelElements.forEach((reelElement) => {
-      reelElement.classList.add("is-spinning");
-    });
-  }
-
   startSingleReel(index) {
     const reelElement = this.reelElements[index];
 
@@ -242,6 +316,7 @@ class SlotMachineUI {
     });
 
     if (this.reelsContainer) {
+      // Force reflow so restarting the class retriggers the CSS animation.
       void this.reelsContainer.offsetWidth;
     }
 
@@ -283,11 +358,11 @@ class SlotMachineUI {
   async animateWin(indexes, flashDurationMs, clearDelayMs) {
     this.clearBoardEffects();
     this.markCells(indexes, "is-winning", true);
-    await new Promise((resolve) => setTimeout(resolve, flashDurationMs));
+    await this.wait(flashDurationMs);
 
     this.markCells(indexes, "is-clearing", true);
     indexes.forEach((index) => this.renderSingleReel(index, null));
-    await new Promise((resolve) => setTimeout(resolve, clearDelayMs));
+    await this.wait(clearDelayMs);
 
     this.markCells(indexes, "is-winning", false);
     this.markCells(indexes, "is-clearing", false);
@@ -296,16 +371,20 @@ class SlotMachineUI {
   async animateTumble(reels, indexes, durationMs) {
     this.renderReels(reels);
     this.markCells(indexes, "is-tumbling", true);
-    await new Promise((resolve) => setTimeout(resolve, durationMs));
+    await this.wait(durationMs);
     this.markCells(indexes, "is-tumbling", false);
   }
 
   renderBalance(balance) {
-    this.balanceElement.textContent = this.formatMoney(balance);
+    if (this.balanceElement) {
+      this.balanceElement.textContent = this.formatMoney(balance);
+    }
   }
 
   renderBet(fixedBet) {
-    this.betElement.textContent = this.formatMoney(fixedBet);
+    if (this.betElement) {
+      this.betElement.textContent = this.formatMoney(fixedBet);
+    }
   }
 
   renderBoardSize(columnCount, rowCount) {
@@ -315,6 +394,10 @@ class SlotMachineUI {
   }
 
   setSpinButtonState({ canSpin, isSpinning, noBalance }) {
+    if (!this.spinButton) {
+      return;
+    }
+
     this.spinButton.disabled = !canSpin;
     this.spinButton.classList.toggle("is-spinning", isSpinning);
     this.spinButton.classList.toggle("is-disabled", !canSpin);
@@ -323,6 +406,10 @@ class SlotMachineUI {
       this.leverButton.disabled = !canSpin;
       this.leverButton.classList.toggle("is-spinning", isSpinning);
       this.leverButton.classList.toggle("is-disabled", !canSpin);
+
+      if (!canSpin || isSpinning) {
+        this.resetLeverGrab();
+      }
     }
 
     const setLabel = (value) => {
@@ -358,10 +445,31 @@ class SlotMachineUI {
     setLabel("Spin");
   }
 
+  setLeverGrabProgress(progress) {
+    if (!this.leverButton) {
+      return;
+    }
+
+    const clampedProgress = Math.max(0, Math.min(1, Number(progress) || 0));
+    this.leverButton.style.setProperty("--lever-grab-progress", clampedProgress.toFixed(3));
+    this.leverButton.classList.toggle("is-grabbed", clampedProgress > 0);
+  }
+
+  resetLeverGrab() {
+    if (!this.leverButton) {
+      return;
+    }
+
+    this.leverButton.classList.remove("is-grabbed");
+    this.leverButton.style.removeProperty("--lever-grab-progress");
+  }
+
   animateLeverPull() {
     if (!this.leverButton || this.leverButton.disabled) {
       return;
     }
+
+    this.resetLeverGrab();
 
     if (this.leverPullTimeoutId !== null) {
       clearTimeout(this.leverPullTimeoutId);
@@ -377,6 +485,10 @@ class SlotMachineUI {
   }
 
   showResult(message, type = "neutral") {
+    if (!this.resultElement) {
+      return;
+    }
+
     this.resultElement.textContent = message;
     this.resultElement.classList.remove("win", "loss");
 

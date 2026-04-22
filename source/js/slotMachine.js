@@ -1,3 +1,5 @@
+const MAX_CASCADES_PER_SPIN = 20;
+
 class SlotMachine {
   constructor({ initialBalance, fixedBet, columnCount, rowCount, symbols }) {
     this.balance = initialBalance;
@@ -25,6 +27,10 @@ class SlotMachine {
     return Math.round(value * 100) / 100;
   }
 
+  wait(durationMs) {
+    return new Promise((resolve) => setTimeout(resolve, durationMs));
+  }
+
   cloneBoard(board) {
     return board.map((row) => [...row]);
   }
@@ -49,7 +55,7 @@ class SlotMachine {
     );
   }
 
-  getWinningGroups(board) {
+  collectPositionsBySymbol(board) {
     const positionsBySymbol = new Map();
 
     board.forEach((row, rowIndex) => {
@@ -64,6 +70,21 @@ class SlotMachine {
       });
     });
 
+    return positionsBySymbol;
+  }
+
+  calculatePayout(symbol, matchedCount) {
+    const extraCount = matchedCount - symbol.minCount;
+    const payout = this.roundMoney(
+      this.fixedBet * (symbol.baseMultiplier + extraCount * symbol.extraMultiplier)
+    );
+
+    return { extraCount, payout };
+  }
+
+  getWinningGroups(board) {
+    const positionsBySymbol = this.collectPositionsBySymbol(board);
+
     return this.symbols
       .map((symbol) => {
         const matchedIndexes = positionsBySymbol.get(symbol.id) || [];
@@ -72,10 +93,7 @@ class SlotMachine {
           return null;
         }
 
-        const extraCount = matchedIndexes.length - symbol.minCount;
-        const payout = this.roundMoney(
-          this.fixedBet * (symbol.baseMultiplier + extraCount * symbol.extraMultiplier)
-        );
+        const { extraCount, payout } = this.calculatePayout(symbol, matchedIndexes.length);
 
         return {
           symbolId: symbol.id,
@@ -94,6 +112,7 @@ class SlotMachine {
     const nextBoard = this.cloneBoard(board);
     const matchedIndexSet = new Set(matchedIndexes);
 
+    // Rebuild each column bottom-up, keeping non-winning symbols and filling from the top.
     for (let columnIndex = 0; columnIndex < this.columnCount; columnIndex += 1) {
       const remainingSymbols = [];
 
@@ -141,7 +160,7 @@ class SlotMachine {
     this.isSpinning = true;
     this.balance -= this.fixedBet;
 
-    await new Promise((resolve) => setTimeout(resolve, durationMs));
+    await this.wait(durationMs);
 
     const reels = this.buildRandomReels();
     let board = this.cloneBoard(reels);
@@ -149,7 +168,8 @@ class SlotMachine {
     let cascadeIndex = 0;
     const cascades = [];
 
-    while (cascadeIndex < 20) {
+    // Hard cap prevents pathological loops in case of unexpected config changes.
+    while (cascadeIndex < MAX_CASCADES_PER_SPIN) {
       const wins = this.getWinningGroups(board);
 
       if (wins.length === 0) {
