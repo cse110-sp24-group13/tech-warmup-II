@@ -4,9 +4,9 @@
 
 We built an improved version of a slot machine game using an AI-assisted development workflow. The final product includes:
 
-- Pixelate pirate theme
+- Pixelated pirate theme
 - Smoother animations
-- Overall quality of life changes to make it a more user friendly interface to make it more engaging and easy to use
+- Overall quality of life changes to make it have a more user friendly interface as well making it more engaging and easy to use
 
 The goal of this project was to explore how AI tools can assist in building software while still maintaining engineering discipline, including testing, clean code, and iterative development.
 
